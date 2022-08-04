@@ -6,7 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -14,10 +17,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 class TestingTrainingApplicationTests {
 
-	@Mock
+	@MockBean
 	private BasicService service ;
 
-	@InjectMocks
+	@Autowired
 	private BasicController controller ;
 
 	@Test
