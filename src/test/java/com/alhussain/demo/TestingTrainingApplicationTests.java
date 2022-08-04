@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.mockito.Mockito.when;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest
@@ -32,6 +32,20 @@ class TestingTrainingApplicationTests {
 	public void testTrial2() {
 		when(service.basicServiceTest()).thenReturn(100) ; // 200 is the actual return
 		assertEquals(100 , controller.getBasicMessage());
+	}
+
+	@Test
+	public void testTrial3()
+	{
+		assertThrows(NullPointerException.class , ()-> { controller.getBasicMessage1(); });
+	}
+
+	@Test
+	public void testTrial4()
+	{
+		when(controller.getBasicMessage()).thenThrow(new NullPointerException()) ;
+		//when(service.basicServiceTest()).thenReturn(100) ; // will fail the test
+		assertThrows(NullPointerException.class , ()-> { controller.getBasicMessage(); });
 	}
 
 
