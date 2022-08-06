@@ -1,23 +1,22 @@
 package com.alhussain.demo;
 
-import com.alhussain.demo.controller.BasicController;
+import com.alhussain.demo.dto.PersonDTO;
 import com.alhussain.demo.service.BasicService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -26,62 +25,42 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 class TestingTrainingApplicationTests {
 
-	@Mock
-	private BasicService service ;
+	@MockBean
+	BasicService pesronServiceTest ;
 
-	@Autowired // used for testing controlelrs
+	@Autowired
 	MockMvc mockMvc ;
 
-	@InjectMocks
-	private BasicController controller ;
-
-	private String name ;
-
-	@BeforeEach
-	public void setUp()
-	{
-		this.name = "hussein" ;
-	}
+	@SpyBean // a spy bean is similar to @mockbean but in spy we call the real object with real behaviour..
+	// in mock we create a fake object to create custom mocking behaviour.
+	private ObjectMapper objectMapper;
 
 	@Test
-	public void testTrial() {
-		log.info("testing ....");
-	}
+	public void shouldGetPerson() throws Exception {
 
-	@Test
-	public void testTrial2() {
-		when(service.basicServiceTest()).thenReturn(100) ; // 200 is the actual return
-		assertEquals(100 , controller.getBasicMessage());
-	}
+		PersonDTO dto = new PersonDTO().setId(1L).setName("hussein");
+		when(pesronServiceTest.fetchPerson(any())).thenReturn(dto);
 
-	@Test
-	public void testTrial3()
-	{
-		assertThrows(NullPointerException.class , ()-> { controller.getBasicMessage1(); });
-	}
-
-	@Test
-	public void testTrial4()
-	{
-		when(controller.getBasicMessage()).thenThrow(new NullPointerException()) ;
-		//when(service.basicServiceTest()).thenReturn(100) ; // will fail the test
-		assertThrows(NullPointerException.class , ()-> { controller.getBasicMessage(); });
-	}
-
-	@Test
-	public void testTrial5() throws Exception {
-		mockMvc.perform(get("/demo/basic_2/{name}" , name)
+		mockMvc.perform(get(
+				"/demo/person/{id}", 1L)
 				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.id").value(1L))
 				.andExpect(jsonPath("$.name").value("hussein"))
 				.andExpect(status().isOk());
 	}
 
+
 	@Test
-	public void testTrial6() {
-		 ReflectionTestUtils.setField(service, "age",15);
-		 log.info("age is: " + service.basicServiceTest2().toString());
+	public void shouldPostPerson() throws Exception {
+
+		PersonDTO dto = new PersonDTO().setId(1L).setName("hussein");
+		when(pesronServiceTest.createPerson(any())).thenReturn(dto);
+
+		mockMvc.perform(post("/demo/person")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(dto)))
+				.andExpect(jsonPath("$.id").value(1L))
+				.andExpect(jsonPath("$.name").value("hussein"))
+				.andExpect(status().isOk());
 	}
-
-
-
 }
