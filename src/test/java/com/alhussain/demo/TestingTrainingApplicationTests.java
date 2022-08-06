@@ -3,25 +3,43 @@ package com.alhussain.demo;
 import com.alhussain.demo.controller.BasicController;
 import com.alhussain.demo.service.BasicService;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@AutoConfigureMockMvc
 @Slf4j
 @SpringBootTest
 class TestingTrainingApplicationTests {
 
-	@MockBean
+	@MockBean // remember: replaces a bean by a mock or adds a new mocked bean
 	private BasicService service ;
+
+	@Autowired // used for testing controlelrs
+	MockMvc mockMvc ;
 
 	@Autowired
 	private BasicController controller ;
+
+	private String name ;
+
+	@BeforeEach
+	public void setUp()
+	{
+		this.name = "hussein" ;
+	}
 
 	@Test
 	public void testTrial() {
@@ -46,6 +64,14 @@ class TestingTrainingApplicationTests {
 		when(controller.getBasicMessage()).thenThrow(new NullPointerException()) ;
 		//when(service.basicServiceTest()).thenReturn(100) ; // will fail the test
 		assertThrows(NullPointerException.class , ()-> { controller.getBasicMessage(); });
+	}
+
+	@Test
+	public void testTrial5() throws Exception {
+		mockMvc.perform(get("/demo/basic_2/{name}" , name)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(jsonPath("$.name").value("hussein"))
+				.andExpect(status().isOk());
 	}
 
 
