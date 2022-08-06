@@ -5,11 +5,13 @@ import com.alhussain.demo.service.BasicService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,13 +26,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 class TestingTrainingApplicationTests {
 
-	@MockBean // remember: replaces a bean by a mock or adds a new mocked bean
+	@Mock
 	private BasicService service ;
 
 	@Autowired // used for testing controlelrs
 	MockMvc mockMvc ;
 
-	@Autowired
+	@InjectMocks
 	private BasicController controller ;
 
 	private String name ;
@@ -72,6 +74,12 @@ class TestingTrainingApplicationTests {
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(jsonPath("$.name").value("hussein"))
 				.andExpect(status().isOk());
+	}
+
+	@Test
+	public void testTrial6() {
+		 ReflectionTestUtils.setField(service, "age",15);
+		 log.info("age is: " + service.basicServiceTest2().toString());
 	}
 
 
