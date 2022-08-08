@@ -4,6 +4,7 @@ import com.alhussain.demo.dto.PersonDTO;
 import com.alhussain.demo.service.BasicService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -23,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Slf4j
 @SpringBootTest
+@Disabled
 class TestingTrainingApplicationTests {
 
 	@MockBean
@@ -37,6 +39,7 @@ class TestingTrainingApplicationTests {
 
 	@Test
 	public void shouldGetPerson() throws Exception {
+		log.info("this test is executing ");
 
 		PersonDTO dto = new PersonDTO().setId(1L).setName("hussein");
 		when(pesronServiceTest.fetchPerson(any())).thenReturn(dto);

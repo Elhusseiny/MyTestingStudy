@@ -4,6 +4,8 @@ import com.alhussain.demo.dto.PersonDTO;
 import com.alhussain.demo.repository.PersonRepository;
 import lombok.AllArgsConstructor;
 import com.alhussain.demo.model.Person;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +13,7 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class BasicService {
 
 	private PersonRepository repository;
@@ -24,6 +26,11 @@ public class BasicService {
 			throw new IllegalArgumentException("user with this id is not present");
 
 		return mapper.map(person.get(), PersonDTO.class);
+	}
+
+	public String showMessage()
+	{
+		return "actual message" ;
 	}
 
 	@Transactional
