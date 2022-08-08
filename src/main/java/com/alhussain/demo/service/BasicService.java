@@ -28,6 +28,14 @@ public class BasicService {
 		return mapper.map(person.get(), PersonDTO.class);
 	}
 
+	@Transactional
+	public Long deletePerson(Long id)
+	{
+		Person person = repository.findById(id).get();
+		repository.delete(person);
+		return id ;
+	}
+
 	public String showMessage()
 	{
 		return "actual message" ;

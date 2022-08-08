@@ -22,4 +22,9 @@ public class BasicController {
 		return basicService.createPerson(person) ;
 
 	}
+	@DeleteMapping("/person/{id}")
+	public Long deletePerson(@PathVariable("id") Long id)
+	{
+		return basicService.deletePerson(id);
+	}
 }
