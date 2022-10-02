@@ -13,6 +13,6 @@ public class AnotherService {
 
     public String showMeAnotherMessage()
     {
-        return "another message" ;
+        return "real message" ;
     }
 }
